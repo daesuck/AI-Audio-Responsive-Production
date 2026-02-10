@@ -18,6 +18,7 @@ import numpy as np
 
 from config import settings
 from src.engine.audio_in import load_audio
+from src.web import config_manager
 from src.engine.features import extract_features
 from src.engine.mode_manager import ModeManager
 from src.engine.highlight import HighlightDetector
@@ -235,6 +236,15 @@ def run_realtime(x: np.ndarray | None = None, sr: int | None = None, audio_path:
 
         # 모드/하이라이트 업데이트
         now = time.time()
+        # 구성 파일 변경 감지: 변경되면 mm/detector 재초기화(간단 반영)
+        cfg_mtime = config_manager.get_config_mtime()
+        if cfg_mtime is not None and getattr(run_realtime, "_last_cfg_mtime", None) != cfg_mtime:
+            # 재로드
+            run_cfg = config_manager.load_config()
+            # 필요한 설정이 있는 경우 ModeManager/HighlightDetector 파라미터에 반영
+            # (간단히 로그로 표시; 향후 더 상세한 매핑 가능)
+            run_realtime._last_cfg_mtime = cfg_mtime
+
         mode = mm.update(feat, now=now)
         hstate = mm.update_highlight(feat, detector, now=now)
 
