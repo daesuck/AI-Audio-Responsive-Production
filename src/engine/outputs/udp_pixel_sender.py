@@ -13,6 +13,8 @@ import math
 import socket
 import struct
 import logging
+from importlib import import_module
+from typing import Optional
 from typing import Tuple
 
 logger = logging.getLogger(__name__)
@@ -61,6 +63,24 @@ class UDPPixelSender:
             dry_run: True이면 전송하지 않고 로그만 출력
         """
         pixel_count = int(len(pixel_payload) / 3)
+
+        # SIM_MODE 설정이 켜져 있으면 시뮬레이터로 전달
+        try:
+            from config import settings
+        except Exception:
+            settings = None
+
+        if settings is not None and getattr(settings, "SIM_MODE", False):
+            # 시뮬레이터를 동적으로 import (순환 참조 방지)
+            try:
+                simmod = import_module("src.sim.pixel_simulator")
+                PixelSimulator = getattr(simmod, "PixelSimulator")
+                sim = PixelSimulator()
+                sim.display_frame(output_id, pixel_payload, frame_index=frame_index)
+                return
+            except Exception as e:
+                logger.warning("SIM_MODE 활성화지만 시뮬레이터 호출 실패: %s", e)
+
         max_payload_per_packet, total_chunks, _ = self._chunk_payload(pixel_payload)
 
         logger.info("전송 시작: %s:%d output_id=%d pixel_count=%d frame_index=%d total_chunks=%d mtu=%d",

@@ -80,8 +80,26 @@ class ArtNetSender:
         if len(dmx_data) > 512:
             raise ValueError("DMX 데이터는 최대 512 바이트여야 합니다")
 
-        # 512 바이트로 패딩
+        # SIM_MODE 설정이 켜져 있으면 DMX 시뮬레이터로 전달
+        try:
+            from config import settings
+        except Exception:
+            settings = None
+
         padded = bytes(dmx_data) + bytes([0] * (512 - len(dmx_data)))
+
+        if settings is not None and getattr(settings, "SIM_MODE", False):
+            try:
+                from importlib import import_module
+
+                simmod = import_module("src.sim.dmx_simulator")
+                DMXSimulator = getattr(simmod, "DMXSimulator")
+                sim = DMXSimulator()
+                sim.display_universe(universe, padded)
+                return
+            except Exception as e:
+                logger.warning("SIM_MODE 활성화지만 DMX 시뮬레이터 호출 실패: %s", e)
+
         packet = self._build_packet(universe, padded)
 
         if dry_run:
