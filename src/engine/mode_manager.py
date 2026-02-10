@@ -14,6 +14,7 @@ class ModeManager:
     """간단한 상태 머신으로 모드를 판정한다.
 
     판정 입력: 프레임별 특징값들 (딕셔너리) — 예: 'rms', 'band_low', 'band_mid', 'band_high', 'onset_density'
+    하이라이트 상태도 추적한다 (A안).
     """
 
     MODES = ("IDLE", "SPEECH", "MUSIC")
@@ -23,6 +24,7 @@ class ModeManager:
         self.current_mode = "IDLE"
         self._candidate = None
         self._candidate_since = None
+        self.highlight_state = "IDLE"  # IDLE, HIGHLIGHT, DROP (A안)
 
     def _score_modes(self, feat: Dict[str, float]) -> Dict[str, float]:
         # 간단 점수 규칙
@@ -75,3 +77,17 @@ class ModeManager:
             return self.current_mode
 
         return self.current_mode
+
+    def update_highlight(self, feat: Dict[str, float], detector, now: float | None = None) -> str:
+        """하이라이트 상태를 업데이트한다 (MUSIC 모드일 때만 작동).
+
+        Args:
+            feat: 특징 딕셔너리
+            detector: HighlightDetector 인스턴스
+            now: 현재 시간
+
+        Returns:
+            highlight_state ("IDLE", "HIGHLIGHT", "DROP")
+        """
+        self.highlight_state = detector.update(feat, self.current_mode, now=now)
+        return self.highlight_state
