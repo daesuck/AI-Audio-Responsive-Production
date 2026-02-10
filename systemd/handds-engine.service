@@ -1,0 +1,29 @@
+[Unit]
+Description=AI Stage Lighting System Engine Service
+Documentation=file:///opt/handds/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/handds
+ExecStart=/opt/handds/scripts/run_engine.sh
+
+# 자동 재시작
+Restart=always
+RestartSec=2
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+# 로그
+StandardOutput=append:/opt/handds/logs/engine.log
+StandardError=append:/opt/handds/logs/engine.log
+
+# 타임아웃 방지 (긴 파일 처리 시)
+TimeoutStartSec=30
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target

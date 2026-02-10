@@ -1,0 +1,28 @@
+# AI Stage Lighting System Dependencies
+
+# 핵심 라이브러리
+numpy>=1.24.0
+scipy>=1.10.0
+
+# 오디오 처리
+sounddevice>=0.4.5
+
+# 웹서버
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+
+# CLI/UI
+click>=8.1.0
+questionary>=1.10.0
+
+# 설정/스키마
+pydantic>=2.0.0
+
+# 개발 및 테스트
+pytest>=7.0.0
+pytest-cov>=4.0.0
+
+# 선택적: 코드 품질
+black>=23.0.0
+flake8>=6.0.0
+isort>=5.12.0

@@ -1,0 +1,31 @@
+[Unit]
+Description=AI Stage Lighting System Web Service (Install Wizard)
+Documentation=file:///opt/handds/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/handds
+ExecStart=/opt/handds/scripts/run_web.sh
+Environment="WEB_HOST=0.0.0.0"
+Environment="WEB_PORT=8000"
+
+# 자동 재시작
+Restart=always
+RestartSec=2
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+# 로그
+StandardOutput=append:/opt/handds/logs/web.log
+StandardError=append:/opt/handds/logs/web.log
+
+# 타임아웃
+TimeoutStartSec=10
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target
