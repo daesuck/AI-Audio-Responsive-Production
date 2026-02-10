@@ -41,6 +41,14 @@ HIGHLIGHT_HYSTERESIS = 0.08 # 히스테리시스 (threshold 주변 반경)
 # 쿨다운 (새로운 하이라이트 판정까지의 최소 시간)
 HIGHLIGHT_COOLDOWN_SECONDS = 0.3
 
+# Fail-safe 설정 (장애 안전)
+# Last-hold 유지 시간 (프레임 송출 실패 감지 후)
+FAILSAFE_HOLD_SECONDS = 1.5
+# 주변조명 강도 (dim_ambient 상태)
+FAILSAFE_AMBIENT_INTENSITY = 0.2
+# Recovery 안정화 기간 (플래핑 방지용)
+FAILSAFE_RECOVERY_HOLD_SECONDS = 0.5
+
 # 실시간 루프 설정
 # 초당 처리 프레임 수 (UI/시뮬 레이트용 기본값)
 TARGET_FPS = 30
