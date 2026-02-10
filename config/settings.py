@@ -27,3 +27,28 @@ MUSIC_ONSET_DENSITY = 0.08   # 프레임 당 onset 비율이 이 이상이면 �
 MODE_HOLD_SECONDS = 0.6   # 새 모드로 바뀌려면 이 시간 동안 연속으로 판단되어야 함
 MODE_HYSTERESIS = 0.05    # 기본 히스테리시스 (비율)
 
+# 하이라이트/드롭 검출 (A안)
+# highlight_score 계산을 위한 가중치
+HIGHLIGHT_WEIGHT_RMS = 0.3
+HIGHLIGHT_WEIGHT_BAND_HIGH = 0.3
+HIGHLIGHT_WEIGHT_FLUX = 0.4
+
+# 하이라이트/드롭 판정
+HIGHLIGHT_THRESHOLD = 0.65  # score >= 이 값이면 하이라이트
+DROP_THRESHOLD = 0.25       # score < 이 값이면 드롭
+HIGHLIGHT_HYSTERESIS = 0.08 # 히스테리시스 (threshold 주변 반경)
+
+# 쿨다운 (새로운 하이라이트 판정까지의 최소 시간)
+HIGHLIGHT_COOLDOWN_SECONDS = 0.3
+
+# 실시간 루프 설정
+# 초당 처리 프레임 수 (UI/시뮬 레이트용 기본값)
+TARGET_FPS = 30
+
+# 프레임당 최소 샘플 수(명시하지 않으면 SAMPLE_RATE / TARGET_FPS 사용)
+# 실시간 목표에 따라 조정 가능
+SAMPLES_PER_FRAME = None
+
+# 루프 종료 타임아웃(테스트용 기본값)
+REALTIME_LOOP_MAX_SECONDS = None
+
